@@ -26,6 +26,19 @@ public class AddressBookMain {
 				System.out.println("Details After edit");
 				System.out.println(ad);
 			}
+			
+			private void DeleteContact(String name) {
+				boolean b = false;
+				Address ad = addressMap.get(name);
+				addressMap.remove(name);
+				for (int i=0; i<addressList.size(); i++) {
+					if(addressList.get(i).getFirst().equals(name)) {
+						addressList.remove(i);
+					}
+				}
+				System.out.println("Contact deleted!!");
+			}
+		
 
 	public static void main(String[] args) {
 				Scanner sc = new Scanner(System.in);
@@ -47,21 +60,37 @@ public class AddressBookMain {
 				String email = sc.next();
 				Address addObj = new Address(first, last, city, state, zip, phoneNum, email);
 				addressBookObj.AddContact(addObj);
+				System.out.println("Enter 1 for edit and 2 for delete: ");
+				int ch=sc.nextInt();
+				switch (ch) {
+				case 1:
+					System.out.println("Enter first name whose address you want to edit: ");
+					String name = sc.next();
+					System.out.println("Enter your city: ");
+					String city1 = sc.next();
+					System.out.println("Enter your state: ");
+					String state1 = sc.next();
+					System.out.println("Enter your zip: ");
+					long zip1 = sc.nextLong();
+					System.out.println("Enter your phone number: ");
+					String phoneNum1 = sc.next();
+					System.out.println("Enter your email: ");
+					sc.nextLine();
+					String email1 = sc.next();
+					addressBookObj.EditContact(name, city1, state1, zip1, phoneNum1, email1);
+					break;
 				
-				System.out.println("Enter first name whose address you want to edit: ");
-				String name = sc.next();
-				System.out.println("Enter your city: ");
-				String city1 = sc.next();
-				System.out.println("Enter your state: ");
-				String state1 = sc.next();
-				System.out.println("Enter your zip: ");
-				long zip1 = sc.nextLong();
-				System.out.println("Enter your phone number: ");
-				String phoneNum1 = sc.next();
-				System.out.println("Enter your email: ");
-				sc.nextLine();
-				String email1 = sc.next();
-				addressBookObj.EditContact(name, city1, state1, zip1, phoneNum1, email1);
+				case 2:
+					System.out.println("Enter the name whose details you want to delete:");
+					String delName = sc.nextLine();
+					addressBookObj.DeleteContact(delName);
+					System.out.println("After deletion List size " + addressBookObj.addressList.size());
+					System.out.println("After deletion Map values " + addressBookObj.addressMap.values());
+					break;
+				default:
+					System.out.println("Invalid input!!");
+				} 
+				
 			}
 		}
 
