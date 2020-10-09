@@ -3,8 +3,8 @@ package com.capgemini.addressbookmain;
 import java.util.*;
 
 public class AddressBookMain {
-	private List<Address> addressList;
-	private Map<String, Address> addressMap;
+	private static List<Address> addressList;
+	private static Map<String, Address> addressMap;
 
 	public AddressBookMain() {
 		addressList = new ArrayList<>();
@@ -18,13 +18,17 @@ public class AddressBookMain {
 
 	private void EditContact(String name, String city, String state, String zip1, String phoneNum, String email) {
 		Address ad = addressMap.get(name);
-		ad.setCity(city);
-		ad.setState(state);
-		ad.setZip(zip1);
-		ad.setPhoneNum(phoneNum);
-		ad.setEmail(email);
-		System.out.println("\nDetails After edit");
-		System.out.println(ad);
+		if (ad == null) {
+			System.out.println("\nSuch Person is not available !!\n");
+		} else {
+			ad.setCity(city);
+			ad.setState(state);
+			ad.setZip(zip1);
+			ad.setPhoneNum(phoneNum);
+			ad.setEmail(email);
+			System.out.println("\nDetails After edit");
+			System.out.println(ad);
+		}
 	}
 
 	private void DeleteContact(String name) {
@@ -39,10 +43,20 @@ public class AddressBookMain {
 		System.out.println("Contact deleted!!");
 	}
 
+	public static boolean checkForDuplicate(String name) {
+		for (Address address : addressList) {
+			if (address.getFirst().equals(name)) {
+				System.out.println("Contact already exists!");
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		AddressBookMain addressBookObj = new AddressBookMain();
-		String ans;
+		String ans = " ";
 		do {
 			System.out.println("Enter \n1 for new insertion: \n2 for edition: \n3 for deleteion: ");
 			int ch = sc.nextInt();
@@ -51,6 +65,8 @@ public class AddressBookMain {
 				System.out.println("Welcome to Address Book System!!\n");
 				System.out.println("Enter your first name: ");
 				String first = sc.next();
+				if (checkForDuplicate(first))
+					continue;
 				System.out.println("Enter your last name: ");
 				String last = sc.next();
 				System.out.println("Enter your city: ");
@@ -65,38 +81,48 @@ public class AddressBookMain {
 				String email = sc.next();
 				Address addObj = new Address(first, last, city, state, zip, phoneNum, email);
 				addressBookObj.AddContact(addObj);
+				System.out.println("Contact added! \n");
 				System.out.println(addObj);
 				break;
 			case 2:
 				System.out.println("Enter first name whose address you want to edit: ");
 				String name = sc.next();
-				System.out.println("Enter your city: ");
-				String city1 = sc.next();
-				System.out.println("Enter your state: ");
-				String state1 = sc.next();
-				System.out.println("Enter your zip: ");
-				String zip1 = sc.next();
-				System.out.println("Enter your phone number: ");
-				String phoneNum1 = sc.next();
-				System.out.println("Enter your email: ");
-				sc.nextLine();
-				String email1 = sc.next();
-				addressBookObj.EditContact(name, city1, state1, zip1, phoneNum1, email1);
+				if (addressMap.containsKey(name)) {
+					System.out.println("Enter your city: ");
+					String city1 = sc.next();
+					System.out.println("Enter your state: ");
+					String state1 = sc.next();
+					System.out.println("Enter your zip: ");
+					String zip1 = sc.next();
+					System.out.println("Enter your phone number: ");
+					String phoneNum1 = sc.next();
+					System.out.println("Enter your email: ");
+					sc.nextLine();
+					String email1 = sc.next();
+					addressBookObj.EditContact(name, city1, state1, zip1, phoneNum1, email1);
+				} else {
+					System.out.println("Such contact is not available for edit.");
+				}
 				break;
 
 			case 3:
 				System.out.println("Enter the name whose details you want to delete:");
-				String delName = sc.nextLine();
-				addressBookObj.DeleteContact(delName);
-				System.out.println("After deletion List size " + addressBookObj.addressList.size());
-				System.out.println("After deletion Map values " + addressBookObj.addressMap.values());
+				String delName = sc.next();
+				if (addressMap.containsKey(delName)) {
+					addressBookObj.DeleteContact(delName);
+					System.out.println("After deletion List size " + addressList.size());
+					System.out.println("After deletion Map values " + addressMap.values());
+				} else
+					System.out.println("Such Contact is not available !");
 				break;
 			default:
 				System.out.println("Invalid input!!");
 			}
-			System.out.println("\n Do you want more insertion, edition or deletion ? ");
+			System.out.println("\n Do you want more insertion, edition or deletion ?(YES or yes): ");
 			ans = sc.next();
-		} while (ans.equals("YES")||(ans.equals("yes")));
+		} while (ans.equals("YES") || (ans.equals("yes")));
+		System.out.println("List size: " + addressList.size());
+		System.out.println("Map values: " + addressMap.values());
 	}
 }
 
