@@ -190,7 +190,7 @@ public class AddressBookManagement {
 	 * UC8
 	 * @param searchName
 	 */
-	public void searchPerson(String searchName) {
+	public int searchPerson(String searchName, boolean isCounting) {
 
 		Iterator itr = addressBookManagement.entrySet().iterator();
 		int noOfPersonInCity = 0;
@@ -204,7 +204,8 @@ public class AddressBookManagement {
 			Collections.sort(listCity);
 			for (String s : listCity) 
 				if (s.equals(searchName)) {
-					System.out.println(mapCity.get(s));
+					if(isCounting)
+						System.out.println(mapCity.get(s));
 					noOfPersonInCity++;
 				}
 
@@ -213,12 +214,19 @@ public class AddressBookManagement {
 			Collections.sort(listState);
 			for (String state : listState)
 				if (state.equals(searchName)) {
-					System.out.println(mapState.get(state));
+					if(isCounting)
+						System.out.println(mapState.get(state));
 					noOfPersonInState++;
 				}
 			}
-		if (noOfPersonInCity == 0 && noOfPersonInState == 0)
+		if (noOfPersonInCity!= 0)
+			return noOfPersonInCity;
+		if(noOfPersonInState!= 0)
+			return noOfPersonInState;
+		else {
 			System.out.println("\nNo Person Found !!\n");
+			return 0;
+		}
 	}
 
 	public static void main(String[] args) {
@@ -255,19 +263,29 @@ public class AddressBookManagement {
 			case 2:
 				System.out.println("Enter city or state to search a person");
 				String searchIn = sc.next();
-				a.searchPerson(searchIn);
+				a.searchPerson(searchIn,true);
+				break;
+				
+			case 3:
+				a.showAddressBooks();
 				break;
 
+			case 4:
+				System.out.println("Enter city or state to view count");
+				String countFor = sc.next();
+				int count = a.searchPerson(countFor, false);
+				if (count != 0)
+					System.out.println("No of Persons in " + countFor + "is : " + count);
+				
 			default:
 				break;
 			}
 
-			if (choice == 3)
+			if (choice == 5)
 				break;
 			else
 				System.out.println("\nEnter option");
 		}
-		a.showAddressBooks();
 	}
 }
 
