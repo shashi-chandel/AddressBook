@@ -1,6 +1,7 @@
 package com.capgemini.addressbookmain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,30 +12,44 @@ import java.util.TreeMap;
 class AddressBookMain {
 	
 	Scanner sc = new Scanner(System.in);
-	public List<Contact> addressList;
-	private Map<String, Contact> addressBookMap;
-
+	private List<Contact> addressBookList;
+	private Map<String, Contact> addressBookByName;
+	private Map<String, Contact> addressBookByCity;
+	private Map<String, Contact> addressBookByState;
+	
 	public AddressBookMain() {
-		addressList = new ArrayList<Contact>();
-		addressBookMap = new HashMap<String, Contact>();
+		addressBookList = new ArrayList<Contact>();
+		addressBookByName = new HashMap<String, Contact>();
+		addressBookByCity = new TreeMap<String, Contact>();
+		addressBookByState = new TreeMap<String, Contact>();
+	}
+
+	public Map<String, Contact> getAddressBookByName() {
+		return addressBookByName;
+	}
+
+	public Map<String, Contact> getAddressBookByCity() {
+		return addressBookByCity;
+	}
+
+	public Map<String, Contact> getAddressBookByState() {
+		return addressBookByState;
 	}
 
 	public List<Contact> getAddressBookList() {
-		return addressList;
-	}
-
-	public Map<String, Contact> getAddressBookMap() {
-		return addressBookMap;
+		return addressBookList;
 	}
 
 	private void addContactPerson(Contact c) {
-		addressList.add(c);
-		addressBookMap.put(c.getFirstName(), c);
+		addressBookList.add(c);
+		addressBookByName.put(c.getFirstName(), c);
+		addressBookByCity.put(c.getCity(), c);
+		addressBookByState.put(c.getState(), c);
 		System.out.println("\nContact Added\n");
 	}
 
 	private void editContactPerson(String firstName) {
-		Contact cp = addressBookMap.get(firstName);
+		Contact cp = addressBookByName.get(firstName);
 		if (cp == null) {
 			System.out.println("\nNo such Person available !!\n");
 		} else {
@@ -57,12 +72,18 @@ class AddressBookMain {
 	}
 
 	public void deleteContactPerson(String name) {
-		boolean b2 = false;
-		Contact cp = addressBookMap.get(name);
-		addressBookMap.remove(name);
-		for (int i = 0; i < addressList.size(); i++) {
-			if (addressList.get(i).getFirstName().equals(name)) {
-				addressList.remove(i);
+		addressBookByName.remove(name);
+		addressBookByCity.forEach((k, v) -> {
+			if (v.getFirstName().equals(name))
+				addressBookByCity.remove(name);
+		});
+		addressBookByState.forEach((k, v) -> {
+			if (v.getFirstName().equals(name))
+				addressBookByState.remove(name);
+		});
+		for (int i = 0; i < addressBookList.size(); i++) {
+			if (addressBookList.get(i).getFirstName().equals(name)) {
+				addressBookList.remove(i);
 			}
 		}
 		System.out.println("Contact Deleted !!!");
@@ -75,7 +96,7 @@ class AddressBookMain {
 	 * @return
 	 */
 	public boolean checkForDuplicateName(String name) {
-		for (Contact cd : addressList) {
+		for (Contact cd : addressBookList) {
 			if (cd.getFirstName().equals(name)) {
 				System.out.println("A Person with this name already exist !!\n");
 				return true;
@@ -125,7 +146,7 @@ class AddressBookMain {
 				}
 				break;
 			case 2:
-					if (addressList.size() == 0) {
+					if (addressBookList.size() == 0) {
 						System.out.println("No Contacts Available !!! \n Please add some ");
 						break;
 					}
@@ -134,13 +155,13 @@ class AddressBookMain {
 					editContactPerson(name);
 				break;
 			case 3:
-					if (addressList.size() == 0) {
+					if (addressBookList.size() == 0) {
 						System.out.println("No Contacts Available !!! \n Please add some ");
 						break;
 					}
 					System.out.println("Enter the first name to delete the contact details");
 					String dname = sc.next();
-					if (addressBookMap.containsKey(dname))
+					if (addressBookByName.containsKey(dname))
 						deleteContactPerson(dname);
 					else
 						System.out.println("No such Contact available !");
@@ -162,7 +183,7 @@ public class AddressBookManagement {
 	public void showAddressBooks() {
 
 		System.out.println("\nList of Address Books Added: \n");
-		addressBookManagement.forEach((k, v) -> System.out.println(k + " " + v.addressList + "\n"));
+		addressBookManagement.forEach((k, v) -> System.out.println(k +"\n"));
 	}
 
 	/**
@@ -172,19 +193,31 @@ public class AddressBookManagement {
 	public void searchPerson(String searchName) {
 
 		Iterator itr = addressBookManagement.entrySet().iterator();
-		int noOfPerson = 0;
+		int noOfPersonInCity = 0;
+		int noOfPersonInState = 0;
 		while (itr.hasNext()) {
 			Map.Entry entry = (Map.Entry) itr.next();
 			AddressBookMain a = (AddressBookMain) entry.getValue();
-			List<Contact> list = a.getAddressBookList();
-			for (Contact c : list) {
-				if (c.getCity().equalsIgnoreCase(searchName) || c.getState().equalsIgnoreCase(searchName)) {
-					System.out.println("\n" + c);
-					noOfPerson++;
+			
+			Map<String, Contact> mapCity = a.getAddressBookByCity();
+			ArrayList<String> listCity = new ArrayList<>(mapCity.keySet());
+			Collections.sort(listCity);
+			for (String s : listCity) 
+				if (s.equals(searchName)) {
+					System.out.println(mapCity.get(s));
+					noOfPersonInCity++;
+				}
+
+			Map<String, Contact> mapState = a.getAddressBookByState();
+			ArrayList<String> listState = new ArrayList<>(mapState.keySet());
+			Collections.sort(listState);
+			for (String state : listState)
+				if (state.equals(searchName)) {
+					System.out.println(mapState.get(state));
+					noOfPersonInState++;
 				}
 			}
-		}
-		if (noOfPerson == 0)
+		if (noOfPersonInCity == 0 && noOfPersonInState == 0)
 			System.out.println("\nNo Person Found !!\n");
 	}
 

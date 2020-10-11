@@ -2,7 +2,7 @@ package com.capgemini.addressbookmain;
 
 import java.util.*;
 
-public class AddressBooksMain {
+class AddressBooksMain {
 	private static List<Address> addressList;
 	private static Map<String, Address> addressMap;
 
