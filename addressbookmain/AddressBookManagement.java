@@ -125,7 +125,6 @@ class AddressBookMain {
 				}
 				break;
 			case 2:
-				while (true) {
 					if (addressList.size() == 0) {
 						System.out.println("No Contacts Available !!! \n Please add some ");
 						break;
@@ -133,10 +132,8 @@ class AddressBookMain {
 					System.out.println("Enter the first name to edit the contact details");
 					String name = sc.next();
 					editContactPerson(name);
-				}
 				break;
 			case 3:
-				while (true) {
 					if (addressList.size() == 0) {
 						System.out.println("No Contacts Available !!! \n Please add some ");
 						break;
@@ -147,7 +144,6 @@ class AddressBookMain {
 						deleteContactPerson(dname);
 					else
 						System.out.println("No such Contact available !");
-				}
 				break;
 			default:
 				break;
