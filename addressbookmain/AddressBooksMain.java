@@ -2,12 +2,12 @@ package com.capgemini.addressbookmain;
 
 import java.util.*;
 
-public class AddressBookMain {
+ class AddressBooksMain {
 	private static List<Address> addressList;
 	private static Map<String, Address> addressMap;
 
-	public AddressBookMain() {
-		addressList = new ArrayList<>();
+	public AddressBooksMain() {
+		addressList = new ArrayList<>();     
 		addressMap = new HashMap<>();
 	}
 
@@ -52,10 +52,9 @@ public class AddressBookMain {
 		}
 		return false;
 	}
-
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		AddressBookMain addressBookObj = new AddressBookMain();
+		AddressBooksMain addressBookObj = new AddressBooksMain();
 		String ans = " ";
 		do {
 			System.out.println("Enter \n1 for new insertion: \n2 for edition: \n3 for deleteion: ");
