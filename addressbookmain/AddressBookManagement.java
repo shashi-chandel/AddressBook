@@ -257,7 +257,14 @@ public class AddressBookManagement {
 		} else
 			System.out.println("Wrong Input");
 	}
-
+	
+	public void sort() {
+		List<Contact> list = new ArrayList<Contact>();
+		addressBookManagement.values().forEach(n -> n.getAddressBookList().forEach(n1 -> list.add(n1)));
+		Collections.sort(list, (Contact c1 , Contact c2)-> c1.getFirstName().compareTo(c2.getFirstName()));
+		list.forEach(n->System.out.println(n));
+	}
+	
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
@@ -270,7 +277,8 @@ public class AddressBookManagement {
 			System.out.println("\n3. Show names of Address Books");
 			System.out.println("\n4. Show persons by city or state");
 			System.out.println("\n5. Show Count of persons by city or state");
-			System.out.println("\n6. Exit");
+			System.out.println("\n6. Sort By First Name");
+			System.out.println("\n7. Exit");
 			System.out.println("\nEnter your choice");
 			int choice = sc.nextInt();
 
@@ -312,12 +320,16 @@ public class AddressBookManagement {
 				System.out.println("Showing Count of Persons by City and State");
 				a.countPerson();
 				break;
+				
+			case 6:
+				a.sort();
+				break;
 
 			default:
 				break;
 			}
 
-			if (choice == 6)
+			if (choice == 7)
 				break;
 			else
 				System.out.println("\nEnter option");
