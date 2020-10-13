@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 class AddressBookMain {
 	
@@ -75,7 +76,7 @@ class AddressBookMain {
 		addressBookByName.remove(name);
 		addressBookByCity.forEach((k, v) -> {
 			if (v.getFirstName().equals(name))
-				addressBookByCity.remove(name);
+				addressBookByCity.remove(name);       
 		});
 		addressBookByState.forEach((k, v) -> {
 			if (v.getFirstName().equals(name))
@@ -88,21 +89,11 @@ class AddressBookMain {
 		}
 		System.out.println("Contact Deleted !!!");
 	}
-
-	/**
-	 * UC7
-	 * 
-	 * @param name
-	 * @return
-	 */
+	
 	public boolean checkForDuplicateName(String name) {
-		for (Contact cd : addressBookList) {
-			if (cd.getFirstName().equals(name)) {
-				System.out.println("A Person with this name already exist !!\n");
-				return true;
-			}
-		}
-		return false;
+		Predicate<Contact> compareName = n -> n.equals(name);
+		boolean value = addressBookList.stream().anyMatch(compareName);
+		return value;
 	}
 
 	public void maintainAddressBook() {
@@ -227,6 +218,7 @@ public class AddressBookManagement {
 			System.out.println("\nNo Person Found !!\n");
 			return 0;
 		}
+		
 	}
 
 	public static void main(String[] args) {
@@ -238,7 +230,10 @@ public class AddressBookManagement {
 		while (true) {
 			System.out.println("\n1. Add a new Address Book");
 			System.out.println("\n2. Search person across all address books");
-			System.out.println("\n3. Exit");
+			System.out.println("\n3. View names of Address Books");
+			System.out.println("\n4. View count of persons according to state or city ");
+			System.out.println("\n5. Sort entries by person's name ");
+			System.out.println("\n6. Exit");
 			System.out.println("\nEnter your choice");
 			int choice = sc.nextInt();
 
@@ -276,12 +271,15 @@ public class AddressBookManagement {
 				int count = a.searchPerson(countFor, false);
 				if (count != 0)
 					System.out.println("No of Persons in " + countFor + "is : " + count);
+				break;
+				
+			case 5:
 				
 			default:
 				break;
 			}
 
-			if (choice == 5)
+			if (choice == 6)
 				break;
 			else
 				System.out.println("\nEnter option");

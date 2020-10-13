@@ -122,8 +122,10 @@ class AddressBooksMain {
 		} while (ans.equals("YES") || (ans.equals("yes")));
 		System.out.println("List size: " + addressList.size());
 		System.out.println("Map values: " + addressMap.values());
+		sc.close();
 	}
 }
+	
 
 class Address {
 
